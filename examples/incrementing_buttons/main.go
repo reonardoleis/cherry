@@ -1,22 +1,16 @@
 package main
 
 import (
-	"sync"
-
-	"github.com/reonardoleis/cherry/pkg/dom"
-	"github.com/reonardoleis/cherry/pkg/manager"
-	"github.com/reonardoleis/cherry/pkg/page"
+	"github.com/reonardoleis/cherry/pkg/router"
 )
 
 func main() {
-	manager := manager.Instance()
-	page := page.NewPage(NewButtonContainer())
+	router := router.Instance()
 
-	manager.RegisterPage(page)
+	router.Route("", Home())
+	router.Route("other", Counter())
 
-	dom.UpdateDOM()
+	router.Handle()
 
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	wg.Wait()
+	select {}
 }

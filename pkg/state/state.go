@@ -1,18 +1,17 @@
 package state
 
 import (
-	"github.com/reonardoleis/cherry/pkg/dom"
+	"github.com/reonardoleis/cherry/pkg/router"
 )
 
 type state[T any] struct {
-	name string
 	data *T
 }
 
 type SetFunc[T any] func(T)
 
-func SetState[T any](name string, initialValue T) (*T, SetFunc[T]) {
-	state := &state[T]{name: name, data: &initialValue}
+func SetState[T any](initialValue T) (*T, SetFunc[T]) {
+	state := &state[T]{data: &initialValue}
 
 	return state.data, state.Set
 }
@@ -23,5 +22,5 @@ func (s state[T]) Get() T {
 
 func (s state[T]) Set(newValue T) {
 	*s.data = newValue
-	dom.UpdateDOM()
+	router.Instance().UpdateDOM()
 }
