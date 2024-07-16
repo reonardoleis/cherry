@@ -56,7 +56,8 @@ func NewButtonContainer() ButtonContainer {
 
 func (b ButtonContainer) Render() string {
 	return fmt.Sprintf("<div>%s<br>%s</div>", b.firstButton.Render(), b.secondButton.Render())
-}```
+}
+```
 
 ### Result
 https://github.com/user-attachments/assets/ffa0b2ae-3dc0-468f-be65-178d151a07b6
