@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"strings"
 	"syscall/js"
 	"time"
@@ -67,6 +68,14 @@ func (r Router) UpdateDOM() {
 	html := r.ActivePage().HTML()
 
 	root.Set("innerHTML", html)
+}
+
+func (r Router) UpdateBinds(key string, val any) {
+	elements := dom.GetElementsByBind(key)
+	for _, element := range elements {
+		element.Set("innerHTML", fmt.Sprintf("%v", val))
+
+	}
 }
 
 func (r *Router) ActivePage() *page.Page {

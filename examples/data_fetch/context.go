@@ -1,15 +1,19 @@
 package main
 
-import "github.com/reonardoleis/cherry/pkg/state"
+import (
+	"github.com/reonardoleis/cherry/pkg/state"
+)
 
 var countryContext *CountryContext
 
 func init() {
 	countryContext = new(CountryContext)
-	countryContext.country, countryContext.setCountry = state.SetState("")
+
+	countryContext.currentCountry = state.SetState("")
+	countryContext.countryList = state.SetState("")
 }
 
 type CountryContext struct {
-	country    *string
-	setCountry state.SetFunc[string]
+	currentCountry *state.State[string]
+	countryList    *state.State[string]
 }

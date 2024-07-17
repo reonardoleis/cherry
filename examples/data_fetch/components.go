@@ -11,10 +11,23 @@ import (
 
 type Button struct {
 	component.Base[any]
+	text        string
+	addFunction component.ComponentFunction
+}
+
+func (b Button) Add(js.Value, []js.Value) any {
+	countryContext.countryList.Set(countryContext.countryList.Get() + fmt.Sprintf("<li>%s</li>", countryContext.currentCountry.Get()))
+	return nil
+}
+
+func NewButton(text string) Button {
+	button := Button{text: text}
+	button.addFunction = dom.CreateFunction(button.Add)
+	return button
 }
 
 func (b Button) Render() string {
-	return "<button>Fetch</button>"
+	return fmt.Sprintf("<button onclick='%s' class='rounded-md w-[100px] text-black bg-yellow-500'>%s</button>", b.addFunction, b.text)
 }
 
 type Input struct {
@@ -31,7 +44,7 @@ func (i *Input) Fetch(js.Value, []js.Value) any {
 			println(err.Error())
 		}
 
-		countryContext.setCountry(country.Capital)
+		countryContext.currentCountry.Set(country.Capital)
 
 	}()
 	return nil
@@ -45,7 +58,7 @@ func NewInput() Input {
 }
 
 func (i Input) Render() string {
-	return fmt.Sprintf("<input id='query' onchange='%s' class='text-black'>", i.fetch)
+	return fmt.Sprintf("<input id='query' onkeyup='%s' class='text-black'>", i.fetch)
 }
 
 type Div struct {
@@ -54,24 +67,25 @@ type Div struct {
 
 func NewDiv() Div {
 	var input = NewInput()
+	var button = NewButton("Add")
 	var div = Div{}
 	div.Register(input)
+	div.Register(button)
+	countryContext.currentCountry.Bind("currentCountry")
+	countryContext.countryList.Bind("countryList")
 
 	return div
 }
 
-func (d Div) CurrentCountry() string {
-	if *countryContext.country != "" {
-		return fmt.Sprintf("<h1>Capital: %s</h1>", *countryContext.country)
-	}
-
-	return ""
-}
-
 func (d Div) Render() string {
 	return parser.HTML(d, fmt.Sprintf(`<div class="container h-full w-full bg-zinc-800 text-white flex flex-col items-center justify-center">
-    %s
     <h2>Search for countries</h2>
     <.Input></.Input>
-  </div>`, d.CurrentCountry()))
+    <div>Current: <state bind="currentCountry"></state></div>
+    <.Button></.Button>
+    <br>
+    <br>
+    <ul bind="countryList">
+    </ul>
+  </div>`))
 }

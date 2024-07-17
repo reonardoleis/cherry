@@ -4,23 +4,29 @@ import (
 	"github.com/reonardoleis/cherry/pkg/router"
 )
 
-type state[T any] struct {
-	data *T
+type State[T any] struct {
+	data    *T
+	boundTo []string
 }
 
 type SetFunc[T any] func(T)
 
-func SetState[T any](initialValue T) (*T, SetFunc[T]) {
-	state := &state[T]{data: &initialValue}
-
-	return state.data, state.Set
+func SetState[T any](initialValue T) *State[T] {
+	state := &State[T]{data: &initialValue}
+	return state
 }
 
-func (s state[T]) Get() T {
+func (s State[T]) Get() T {
 	return *s.data
 }
 
-func (s state[T]) Set(newValue T) {
+func (s *State[T]) Set(newValue T) {
 	*s.data = newValue
-	router.Instance().UpdateDOM()
+	for _, bind := range s.boundTo {
+		router.Instance().UpdateBinds(bind, *s.data)
+	}
+}
+
+func (s *State[T]) Bind(key string) {
+	s.boundTo = append(s.boundTo, key)
 }

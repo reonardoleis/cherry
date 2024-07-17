@@ -5,12 +5,14 @@ import "reflect"
 type Component[T any] interface {
 	Render() string
 	Children() map[string][]Component[T]
+	Notify()
 }
 
 type ComponentFunction = string
 
 type Base[T any] struct {
 	children map[string][]Component[T]
+	Html     string
 }
 
 func (b *Base[T]) Register(component Component[T]) {
@@ -31,3 +33,5 @@ func (b *Base[T]) Register(component Component[T]) {
 func (b Base[T]) Children() map[string][]Component[T] {
 	return b.children
 }
+
+func (b Base[T]) Notify() {}
