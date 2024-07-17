@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/f119d384-91d7-432e-8c3e-c5f82fa94e75
 # Cherry
 
 <img align="right" width="159px" src="https://i.imgur.com/qz0AVzM.png">
@@ -90,5 +92,5 @@ func (d Div) Render() string {
 ```
 
 ### Result
-[Video](https://github.com/user-attachments/assets/ffa0b2ae-3dc0-468f-be65-178d151a07b6)
+
 
